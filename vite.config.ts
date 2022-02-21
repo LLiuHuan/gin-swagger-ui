@@ -7,8 +7,10 @@ import { format } from 'date-fns';
 import { loadEnv } from 'vite';
 import { wrapperEnv } from './build/utils';
 import { OUTPUT_DIR } from './build/constant';
-import { createStyleImportPlugin } from 'vite-plugin-style-import';
-
+// @ts-ignore
+import Components from 'unplugin-vue-components/vite';
+// @ts-ignore
+import { ArcoResolver } from 'unplugin-vue-components/resolvers';
 const { dependencies, devDependencies, name, version } = pkg;
 
 const __APP_INFO__ = {
@@ -31,19 +33,8 @@ export default ({ mode, command }: ConfigEnv): UserConfig => {
     plugins: [
       vue(),
       WindiCSS(),
-      createStyleImportPlugin({
-        libs: [
-          {
-            libraryName: '@arco-design/web-vue',
-            esModule: true,
-            resolveStyle: (name) => {
-              // css
-              // return `@arco-design/web-vue/es/${name}/style/css.js`;
-              // less
-              return `@arco-design/web-vue/es/${name}/style/index.js`;
-            },
-          },
-        ],
+      Components({
+        resolvers: [ArcoResolver()],
       }),
     ],
     base: 'swagger',
